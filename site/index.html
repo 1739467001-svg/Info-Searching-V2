@@ -1,0 +1,457 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Info Searching 知识库</title>
+<meta name="description" content="信息搜集 · 多维解析 · 知识沉淀：分层组织、按需加载的个人知识库">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<style>
+:root {
+  --bg: #f7f8fa; --panel: #ffffff; --text: #1f2328; --muted: #656d76; --border: #d8dee4;
+  --accent: #2f6feb; --accent-soft: #e8f1ff; --card-bg: #f3f8ff; --card-border: #9ec2ff;
+  --code-bg: #f1f3f5; --warn: #9a6700; --ok: #1a7f37; --shadow: 0 1px 3px rgba(0,0,0,.06);
+  --pending: #a0a7b0;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d1117; --panel: #161b22; --text: #e6edf3; --muted: #8d96a0; --border: #30363d;
+    --accent: #58a6ff; --accent-soft: #1b2a41; --card-bg: #121d2f; --card-border: #2f5a99;
+    --code-bg: #1f2630; --warn: #d29922; --ok: #3fb950; --shadow: none; --pending: #6e7681;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d1117; --panel: #161b22; --text: #e6edf3; --muted: #8d96a0; --border: #30363d;
+  --accent: #58a6ff; --accent-soft: #1b2a41; --card-bg: #121d2f; --card-border: #2f5a99;
+  --code-bg: #1f2630; --warn: #d29922; --ok: #3fb950; --shadow: none; --pending: #6e7681;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; background: var(--bg); color: var(--text); }
+body { font: 16px/1.75 -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", sans-serif; }
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+header {
+  position: sticky; top: 0; z-index: 20; display: flex; align-items: center; gap: 12px;
+  padding: 10px 16px; background: var(--panel); border-bottom: 1px solid var(--border);
+}
+header .brand { font-weight: 700; white-space: nowrap; color: var(--text); }
+header nav { display: flex; gap: 14px; font-size: 15px; }
+#menuBtn { display: none; background: none; border: 1px solid var(--border); color: var(--text); border-radius: 6px; padding: 2px 8px; font-size: 18px; }
+.search { position: relative; flex: 1; max-width: 420px; margin-left: auto; }
+.search input {
+  width: 100%; padding: 7px 12px; border: 1px solid var(--border); border-radius: 8px;
+  background: var(--bg); color: var(--text); font-size: 15px;
+}
+#results {
+  position: absolute; top: 40px; left: 0; right: 0; background: var(--panel); border: 1px solid var(--border);
+  border-radius: 8px; box-shadow: 0 8px 24px rgba(0,0,0,.12); max-height: 60vh; overflow: auto; display: none;
+}
+#results a { display: block; padding: 8px 12px; color: var(--text); border-bottom: 1px solid var(--border); }
+#results a:hover, #results a.active { background: var(--accent-soft); text-decoration: none; }
+#results small { display: block; color: var(--muted); line-height: 1.4; }
+#themeBtn { background: none; border: 1px solid var(--border); color: var(--text); border-radius: 6px; padding: 3px 8px; cursor: pointer; }
+.layout { display: grid; grid-template-columns: 260px minmax(0, 1fr); max-width: 1280px; margin: 0 auto; }
+aside {
+  position: sticky; top: 53px; height: calc(100vh - 53px); overflow: auto; padding: 16px 12px;
+  border-right: 1px solid var(--border); font-size: 14px;
+}
+aside h4 { margin: 14px 0 4px; font-size: 13px; color: var(--muted); font-weight: 600; }
+aside a { display: block; padding: 3px 8px; border-radius: 6px; color: var(--text); line-height: 1.5; }
+aside a.cur { background: var(--accent-soft); color: var(--accent); }
+aside .empty { color: var(--muted); padding: 0 8px; font-size: 13px; }
+main { padding: 24px 32px 80px; min-width: 0; }
+article { max-width: 860px; }
+article h1 { font-size: 30px; line-height: 1.3; margin: 0 0 8px; }
+article h2 { font-size: 22px; margin-top: 40px; padding-bottom: 6px; border-bottom: 1px solid var(--border); }
+article h3 { font-size: 18px; margin-top: 28px; }
+article table { border-collapse: collapse; display: block; overflow-x: auto; margin: 16px 0; font-size: 15px; }
+article th, article td { border: 1px solid var(--border); padding: 6px 10px; vertical-align: top; }
+article th { background: var(--code-bg); }
+article blockquote { margin: 16px 0; padding: 4px 16px; border-left: 4px solid var(--border); color: var(--muted); }
+article code { background: var(--code-bg); padding: 1px 5px; border-radius: 4px; font-size: .9em; }
+article pre { background: var(--code-bg); padding: 12px 14px; border-radius: 8px; overflow-x: auto; line-height: 1.5; }
+article pre code { padding: 0; background: none; }
+article details { border: 1px solid var(--border); border-radius: 8px; padding: 6px 12px; margin: 8px 0; background: var(--panel); }
+article summary { cursor: pointer; font-weight: 600; }
+article img { max-width: 100%; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0 18px; font-size: 13px; }
+.badge { padding: 2px 8px; border-radius: 999px; border: 1px solid var(--border); background: var(--panel); color: var(--muted); }
+.badge.dom { color: var(--accent); border-color: var(--card-border); background: var(--accent-soft); }
+.card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 12px; padding: 4px 20px; margin: 12px 0 20px; }
+.card blockquote { border-left-color: var(--card-border); color: var(--text); }
+.card::before { content: "📇 卡片 · 30 秒读懂"; display: block; font-size: 12px; color: var(--muted); margin-top: 10px; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0; }
+.chip { font-size: 13px; padding: 3px 10px; border-radius: 999px; border: 1px solid var(--border); background: var(--panel); color: var(--text); }
+.chip.pending { border-style: dashed; color: var(--muted); }
+.chip em { font-style: normal; color: var(--muted); margin-right: 4px; }
+sup.fnref a { cursor: pointer; font-size: 12px; }
+.fnlist li { font-size: 14px; line-height: 1.6; margin: 6px 0; word-break: break-word; }
+.fnlist li:target, .flash { background: var(--accent-soft); }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 12px; margin: 16px 0; }
+.tile { background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; box-shadow: var(--shadow); color: var(--text); }
+.tile:hover { border-color: var(--accent); text-decoration: none; }
+.tile b { display: block; font-size: 15px; }
+.tile span { color: var(--muted); font-size: 13px; }
+.stat { font-size: 28px; font-weight: 700; }
+.hero p { color: var(--muted); }
+#graph { width: 100%; height: 72vh; border: 1px solid var(--border); border-radius: 12px; background: var(--panel); }
+#graph text { font-size: 12px; fill: var(--text); pointer-events: none; }
+.legend { display: flex; flex-wrap: wrap; gap: 10px; font-size: 13px; color: var(--muted); margin: 8px 0; }
+.legend i { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 4px; vertical-align: middle; }
+.note { color: var(--muted); font-size: 14px; }
+.mermaid { margin: 16px 0; overflow-x: auto; }
+@media (max-width: 860px) {
+  #menuBtn { display: inline-block; }
+  header nav { display: none; }
+  .layout { grid-template-columns: 1fr; }
+  aside { position: fixed; left: 0; top: 53px; width: 82vw; max-width: 320px; background: var(--panel); z-index: 15; transform: translateX(-105%); transition: transform .2s; box-shadow: 4px 0 16px rgba(0,0,0,.15); }
+  aside.open { transform: none; }
+  main { padding: 16px 16px 60px; }
+  article h1 { font-size: 24px; }
+}
+</style>
+</head>
+<body>
+<header>
+  <button id="menuBtn" aria-label="目录">☰</button>
+  <a class="brand" href="#/">📚 Info Searching</a>
+  <nav>
+    <a href="#/">首页</a>
+    <a href="#/graph">关系图</a>
+    <a href="#/doc/graph/frontier.md">研究前沿</a>
+    <a href="#/doc/system/ARCHITECTURE.md">架构</a>
+  </nav>
+  <div class="search">
+    <input id="q" type="search" placeholder="搜索概念、别名、英文名…（按 / 聚焦）" autocomplete="off">
+    <div id="results"></div>
+  </div>
+  <button id="themeBtn" title="切换深浅色">◐</button>
+</header>
+<div class="layout">
+  <aside id="side"></aside>
+  <main><article id="view"><p class="note">加载中…</p></article></main>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/dompurify@3.1.6/dist/purify.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.min.js"></script>
+<script>
+"use strict";
+const S = { base: "", data: null, byId: {}, byPath: {}, palette: {} };
+const COLORS = ["#2f6feb", "#1a7f37", "#bf3989", "#9a6700", "#8250df", "#cf222e", "#0a7ea4", "#bc4c00", "#57606a", "#116329"];
+const STATUS = { draft: "🌱 草稿", standard: "🌿 标准", deep: "🌳 深度" };
+const CONF = { high: "置信度 高", medium: "置信度 中", low: "置信度 低" };
+const $ = (s) => document.querySelector(s);
+const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+
+// ---------- 主题（只记在本机浏览器，失败也不影响使用） ----------
+function applyTheme(t) { if (t) document.documentElement.setAttribute("data-theme", t); else document.documentElement.removeAttribute("data-theme"); }
+try { applyTheme(localStorage.getItem("kb-theme")); } catch (e) {}
+$("#themeBtn").onclick = () => {
+  const cur = document.documentElement.getAttribute("data-theme");
+  const dark = cur ? cur === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+  const next = dark ? "light" : "dark";
+  applyTheme(next);
+  try { localStorage.setItem("kb-theme", next); } catch (e) {}
+  if (location.hash.startsWith("#/graph")) route();
+};
+
+// ---------- 数据 ----------
+async function fetchText(p) {
+  const r = await fetch(S.base + p, { cache: "no-cache" });
+  if (!r.ok) throw new Error(`${p}: HTTP ${r.status}`);
+  return r.text();
+}
+async function boot() {
+  for (const b of ["", "../"]) {
+    try {
+      const r = await fetch(b + "graph/graph.json", { cache: "no-cache" });
+      if (r.ok) { S.base = b; S.data = await r.json(); break; }
+    } catch (e) {}
+  }
+  if (!S.data) { $("#view").innerHTML = "<p>无法加载 graph/graph.json。请先运行 <code>python3 tools/kb.py index</code>，并通过 HTTP 服务访问本页面（见 README）。</p>"; return; }
+  Object.keys(S.data.domains).forEach((d, i) => (S.palette[d] = COLORS[i % COLORS.length]));
+  for (const n of S.data.nodes) { S.byId[n.id] = n; if (n.path) S.byPath[n.path] = n; }
+  if (window.mermaid) mermaid.initialize({ startOnLoad: false, securityLevel: "strict", theme: isDark() ? "dark" : "default" });
+  renderSide();
+  window.addEventListener("hashchange", route);
+  route();
+}
+const isDark = () => { const t = document.documentElement.getAttribute("data-theme"); return t ? t === "dark" : matchMedia("(prefers-color-scheme: dark)").matches; };
+const entries = () => S.data.nodes.filter((n) => !n.pending);
+
+// ---------- 侧边栏 ----------
+function renderSide() {
+  const out = [];
+  for (const [d, info] of Object.entries(S.data.domains)) {
+    const es = entries().filter((n) => n.domain === d).sort((a, b) => a.title.localeCompare(b.title, "zh"));
+    out.push(`<h4>${info.icon} ${esc(info.name)} <span class="note">${es.length || ""}</span></h4>`);
+    out.push(es.length ? es.map((n) => `<a href="#/doc/${n.path}" data-path="${n.path}">${esc(n.title)}</a>`).join("") : `<div class="empty">暂无</div>`);
+  }
+  $("#side").innerHTML = out.join("");
+}
+function markSide(path) {
+  document.querySelectorAll("#side a").forEach((a) => a.classList.toggle("cur", a.dataset.path === path));
+}
+$("#menuBtn").onclick = () => $("#side").classList.toggle("open");
+
+// ---------- 搜索 ----------
+function score(n, q) {
+  const fields = [[n.title, 6], [n.en, 5], [n.id, 5], ...(n.aliases || []).map((a) => [a, 5]), ...(n.tags || []).map((t) => [t, 2]), [n.summary, 1]];
+  let s = 0;
+  for (const [v, w] of fields) {
+    const x = String(v || "").toLowerCase();
+    if (!x) continue;
+    if (x === q) s += w * 3; else if (x.includes(q)) s += w * 1.5; else if (q.includes(x) && x.length >= 2) s += w;
+  }
+  return s;
+}
+let hits = [], hitIdx = 0;
+function search() {
+  const q = $("#q").value.trim().toLowerCase();
+  const box = $("#results");
+  if (!q) { box.style.display = "none"; return; }
+  hits = entries().map((n) => [score(n, q), n]).filter((x) => x[0] > 0).sort((a, b) => b[0] - a[0]).slice(0, 8).map((x) => x[1]);
+  hitIdx = 0;
+  box.innerHTML = hits.length
+    ? hits.map((n, i) => `<a href="#/doc/${n.path}" class="${i === 0 ? "active" : ""}">${esc(n.title)} <span class="note">${esc(n.en || "")}</span><small>${esc(n.summary)}</small></a>`).join("")
+    : `<a>没有找到「${esc(q)}」。可以把它记到 inbox.md，或用 /research 研究它。</a>`;
+  box.style.display = "block";
+}
+$("#q").addEventListener("input", search);
+$("#q").addEventListener("keydown", (e) => {
+  const links = [...document.querySelectorAll("#results a[href]")];
+  if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+    e.preventDefault(); if (!links.length) return;
+    hitIdx = (hitIdx + (e.key === "ArrowDown" ? 1 : -1) + links.length) % links.length;
+    links.forEach((a, i) => a.classList.toggle("active", i === hitIdx));
+  } else if (e.key === "Enter" && links[hitIdx]) { location.hash = links[hitIdx].getAttribute("href"); closeSearch(); }
+  else if (e.key === "Escape") closeSearch();
+});
+document.addEventListener("click", (e) => { if (!e.target.closest(".search")) $("#results").style.display = "none"; });
+document.addEventListener("keydown", (e) => { if (e.key === "/" && document.activeElement !== $("#q")) { e.preventDefault(); $("#q").focus(); } });
+function closeSearch() { $("#results").style.display = "none"; $("#q").blur(); }
+
+// ---------- 路由 ----------
+function route() {
+  const h = decodeURIComponent(location.hash.slice(1) || "/");
+  $("#side").classList.remove("open");
+  $("#results").style.display = "none";
+  if (h.startsWith("/doc/")) return renderDoc(h.slice(5));
+  if (h.startsWith("/graph")) return renderGraph();
+  return renderHome();
+}
+
+// ---------- 首页 ----------
+function renderHome() {
+  markSide(null);
+  const es = entries();
+  const pending = S.data.nodes.filter((n) => n.pending).length;
+  const srcs = es.reduce((a, n) => a + (n.sources || 0), 0);
+  const quiz = es.reduce((a, n) => a + (n.quiz || 0), 0);
+  const recent = [...es].sort((a, b) => (b.updated || "").localeCompare(a.updated || "")).slice(0, 8);
+  const doms = Object.entries(S.data.domains).map(([d, info]) => {
+    const c = es.filter((n) => n.domain === d).length;
+    return `<a class="tile" href="#/doc/kb/${d}/README.md"><b>${info.icon} ${esc(info.name)}</b><span>${esc(info.scope)}</span><div class="note">${c} 个条目</div></a>`;
+  }).join("");
+  $("#view").innerHTML = `
+    <div class="hero">
+      <h1>信息搜集 · 多维解析 · 知识沉淀</h1>
+      <p>给一个名词，联网多源检索、交叉核实，从八个维度讲清楚，并沉淀为分层组织的知识条目。每个条目都有"一句话 → 卡片 → 全文"三层，AI 与人都可以按需阅读。</p>
+    </div>
+    <div class="grid">
+      <div class="tile"><div class="stat">${es.length}</div><span>条目</span></div>
+      <div class="tile"><div class="stat">${S.data.edges.length}</div><span>关系</span></div>
+      <div class="tile"><div class="stat">${srcs}</div><span>已核实来源</span></div>
+      <div class="tile"><div class="stat">${quiz}</div><span>自测题</span></div>
+      <a class="tile" href="#/doc/graph/frontier.md"><div class="stat">${pending}</div><span>待研究前沿 →</span></a>
+    </div>
+    <h2>约法三章</h2>
+    <ol><li><b>准确第一</b>：来源分级、标注核实方式，不编造、不把记忆当事实。</li>
+    <li><b>兼听则明</b>：多类平台、中英文检索，共识与分歧分开写。</li>
+    <li><b>讲明白</b>：理解梯度、可复算的例子、写明失效边界的类比。</li></ol>
+    <h2>最近更新</h2>
+    <ul>${recent.map((n) => `<li><a href="#/doc/${n.path}">${esc(n.title)}</a> <span class="note">${esc(n.updated)} · ${esc(n.summary)}</span></li>`).join("")}</ul>
+    <h2>领域</h2><div class="grid">${doms}</div>
+    <p class="note">更多：<a href="#/graph">关系图</a> · <a href="#/doc/INDEX.md">全库登记簿</a> · <a href="#/doc/ROADMAP.md">项目计划</a> · <a href="#/doc/AGENTS.md">AI 协作协议</a></p>`;
+  document.title = "Info Searching 知识库";
+  window.scrollTo(0, 0);
+}
+
+// ---------- Markdown 渲染 ----------
+function splitFrontMatter(t) {
+  if (!t.startsWith("---\n")) return [null, t];
+  const end = t.indexOf("\n---\n", 4);
+  return end < 0 ? [null, t] : [t.slice(4, end), t.slice(end + 5)];
+}
+function protectMath(md, store) {
+  // 只处理代码块之外的部分
+  return md.split(/(```[\s\S]*?```)/g).map((part) => {
+    if (part.startsWith("```")) return part;
+    part = part.replace(/\$\$([\s\S]+?)\$\$/g, (_, m) => { store.push([m, true]); return `@@MATH${store.length - 1}@@`; });
+    return part.replace(/(^|[^\\$])\$([^\s$](?:[^$\n]*?[^\s$])?)\$/g, (_, pre, m) => { store.push([m, false]); return `${pre}@@MATH${store.length - 1}@@`; });
+  }).join("");
+}
+function footnotes(md) {
+  const defs = {}, order = [];
+  md = md.replace(/^\[\^([\w-]+)\]:\s*(.+)$/gm, (_, k, txt) => { defs[k] = txt; return `@@FNDEF:${k}@@`; });
+  md = md.replace(/\[\^([\w-]+)\](?!:)/g, (_, k) => {
+    if (!order.includes(k)) order.push(k);
+    const n = order.indexOf(k) + 1;
+    const tip = esc((defs[k] || "").replace(/<[^>]+>|\*\*/g, ""));
+    return `<sup class="fnref"><a data-fn="${esc(k)}" title="${tip}">[${n}]</a></sup>`;
+  });
+  // 把集中的定义行改成编号列表（保持在原位置）
+  md = md.replace(/(@@FNDEF:[\w-]+@@\n?)+/g, (block) => {
+    const keys = [...block.matchAll(/@@FNDEF:([\w-]+)@@/g)].map((m) => m[1]);
+    const items = keys.map((k) => {
+      const n = order.includes(k) ? order.indexOf(k) + 1 : "·";
+      return `<li id="fn-${esc(k)}"><b>[${n}]</b> ${marked.parseInline(defs[k] || "")}</li>`;
+    });
+    return `\n<ol class="fnlist" style="list-style:none;padding-left:0">${items.join("")}</ol>\n`;
+  });
+  return md;
+}
+function renderMarkdown(md) {
+  const math = [];
+  md = protectMath(md, math);
+  md = footnotes(md);
+  let html = marked.parse(md, { gfm: true, breaks: false });
+  html = DOMPurify.sanitize(html, { ADD_ATTR: ["data-fn", "target"], ADD_TAGS: ["details", "summary"] });
+  html = html.replace(/@@MATH(\d+)@@/g, (_, i) => {
+    const [tex, display] = math[+i];
+    try { return katex.renderToString(tex, { displayMode: display, throwOnError: false }); }
+    catch (e) { return esc(tex); }
+  });
+  return html;
+}
+function resolvePath(from, rel) {
+  if (/^[a-z]+:/i.test(rel) || rel.startsWith("#")) return null;
+  const parts = from.split("/").slice(0, -1);
+  for (const seg of rel.split("/")) {
+    if (seg === "..") parts.pop(); else if (seg !== ".") parts.push(seg);
+  }
+  return parts.join("/");
+}
+function postProcess(root, path) {
+  root.querySelectorAll("a[href]").forEach((a) => {
+    const href = a.getAttribute("href");
+    if (/^https?:/i.test(href)) { a.target = "_blank"; a.rel = "noopener"; return; }
+    const [p, anchor] = href.split("#");
+    if (p && p.endsWith(".md")) { const r = resolvePath(path, p); if (r) a.setAttribute("href", "#/doc/" + r); }
+    else if (!p && anchor) { a.removeAttribute("href"); a.style.cursor = "pointer"; a.onclick = () => document.getElementById(anchor)?.scrollIntoView({ behavior: "smooth" }); }
+  });
+  root.querySelectorAll("sup.fnref a").forEach((a) => {
+    a.onclick = () => {
+      const li = document.getElementById("fn-" + a.dataset.fn);
+      if (!li) return;
+      li.scrollIntoView({ behavior: "smooth", block: "center" });
+      li.classList.add("flash"); setTimeout(() => li.classList.remove("flash"), 1600);
+    };
+  });
+  const blocks = root.querySelectorAll("pre code.language-mermaid");
+  blocks.forEach((code) => { const div = document.createElement("div"); div.className = "mermaid"; div.textContent = code.textContent; code.parentElement.replaceWith(div); });
+  if (blocks.length && window.mermaid) { mermaid.initialize({ startOnLoad: false, securityLevel: "strict", theme: isDark() ? "dark" : "default" }); mermaid.run({ nodes: root.querySelectorAll(".mermaid") }).catch(() => {}); }
+}
+function relationChips(n) {
+  const R = S.data.relations;
+  const out = S.data.edges.filter((e) => e.source === n.id).map((e) => [R[e.type]?.label || e.type, e.target]);
+  const inc = S.data.edges.filter((e) => e.target === n.id).map((e) => [R[e.type]?.inverse || e.type, e.source]);
+  const chip = ([label, id]) => {
+    const m = S.byId[id];
+    return m && !m.pending
+      ? `<a class="chip" href="#/doc/${m.path}" title="${esc(m.summary)}"><em>${esc(label)}</em>${esc(m.title)}</a>`
+      : `<span class="chip pending" title="尚未建立条目"><em>${esc(label)}</em>${esc(id)}</span>`;
+  };
+  return [...out, ...inc].map(chip).join("");
+}
+async function renderDoc(path) {
+  markSide(path);
+  let text;
+  try { text = await fetchText(path); }
+  catch (e) { $("#view").innerHTML = `<p>无法读取 <code>${esc(path)}</code>：${esc(e.message)}</p>`; return; }
+  const [, body] = splitFrontMatter(text);
+  const n = S.byPath[path];
+  let html;
+  const m = body.match(/<!-- CARD:START -->([\s\S]*?)<!-- CARD:END -->/);
+  if (m) {
+    const [before, after] = [body.slice(0, m.index), body.slice(m.index + m[0].length)];
+    // 卡片里不渲染脚注列表，正文统一编号：把卡片与正文合并处理后再切开
+    const marker = "\n\n@@CARDSPLIT@@\n\n";
+    const all = renderMarkdown(before + marker + m[1] + marker + after);
+    const [h0, h1, h2] = all.split(/<p>@@CARDSPLIT@@<\/p>/);
+    html = h0 + (n ? metaBar(n) : "") + `<div class="card">${h1 || ""}</div>` + (n ? `<div class="chips">${relationChips(n)}</div>` : "") + (h2 || "");
+  } else {
+    html = renderMarkdown(body);
+  }
+  const view = $("#view");
+  view.innerHTML = html;
+  postProcess(view, path);
+  document.title = (n ? n.title : path) + " · Info Searching";
+  window.scrollTo(0, 0);
+}
+function metaBar(n) {
+  const d = S.data.domains[n.domain] || {};
+  return `<div class="meta">
+    <span class="badge dom">${d.icon || ""} ${esc(d.name || n.domain)}</span>
+    <span class="badge">${esc(S.data.kinds[n.kind] || n.kind)}</span>
+    <span class="badge">${STATUS[n.status] || esc(n.status)}</span>
+    <span class="badge">${CONF[n.confidence] || esc(n.confidence)}</span>
+    <span class="badge">来源 ${n.sources}</span>
+    <span class="badge">自测 ${n.quiz}</span>
+    <span class="badge">更新 ${esc(n.updated)}</span></div>`;
+}
+
+// ---------- 关系图 ----------
+function renderGraph() {
+  markSide(null);
+  const doms = Object.entries(S.data.domains);
+  $("#view").innerHTML = `<h1>关系图</h1>
+    <p class="note">实心圆 = 已建条目（颜色表示领域），空心圆 = 被引用但尚未建立的"研究前沿"。可拖动、缩放，点击实心圆打开条目。</p>
+    <div class="legend">${doms.map(([d, i]) => `<span><i style="background:${S.palette[d]}"></i>${esc(i.name)}</span>`).join("")}<span><i style="border:1px dashed var(--pending)"></i>待建</span></div>
+    <svg id="graph"></svg>`;
+  if (!window.d3) { $("#graph").outerHTML = "<p>关系图需要 d3（CDN 加载失败）。</p>"; return; }
+  const svg = d3.select("#graph");
+  const { width, height } = svg.node().getBoundingClientRect();
+  const nodes = S.data.nodes.map((n) => ({ ...n }));
+  const ids = new Set(nodes.map((n) => n.id));
+  const links = S.data.edges.filter((e) => ids.has(e.source) && ids.has(e.target)).map((e) => ({ ...e }));
+  const g = svg.append("g");
+  svg.call(d3.zoom().scaleExtent([0.3, 4]).on("zoom", (ev) => g.attr("transform", ev.transform)));
+  const muted = getComputedStyle(document.documentElement).getPropertyValue("--pending").trim();
+  const link = g.append("g").selectAll("line").data(links).join("line")
+    .attr("stroke", muted).attr("stroke-opacity", 0.6).attr("stroke-width", 1.2)
+    .attr("stroke-dasharray", (d) => (S.byId[d.target]?.pending ? "4 3" : null));
+  link.append("title").text((d) => `${S.byId[d.source]?.title || d.source} —${S.data.relations[d.type]?.label || d.type}→ ${S.byId[d.target]?.title || d.target}`);
+  const node = g.append("g").selectAll("g").data(nodes).join("g").style("cursor", (d) => (d.pending ? "default" : "pointer"));
+  node.append("circle").attr("r", (d) => (d.pending ? 6 : 11))
+    .attr("fill", (d) => (d.pending ? "transparent" : S.palette[d.domain] || "#888"))
+    .attr("stroke", (d) => (d.pending ? muted : "#fff")).attr("stroke-width", 1.5)
+    .attr("stroke-dasharray", (d) => (d.pending ? "3 2" : null));
+  node.append("text").attr("x", 14).attr("y", 4).text((d) => d.title);
+  node.append("title").text((d) => (d.pending ? `${d.id}（待建）` : `${d.title}\n${d.summary}`));
+  node.on("click", (ev, d) => { if (!d.pending) location.hash = "#/doc/" + d.path; });
+  const sim = d3.forceSimulation(nodes)
+    .force("link", d3.forceLink(links).id((d) => d.id).distance(90))
+    .force("charge", d3.forceManyBody().strength(-260))
+    .force("center", d3.forceCenter(width / 2, height / 2))
+    .force("x", d3.forceX(width / 2).strength(0.07))   // 让互不相连的子图也留在画面中
+    .force("y", d3.forceY(height / 2).strength(0.07))
+    .force("collide", d3.forceCollide(28));
+  node.call(d3.drag()
+    .on("start", (ev, d) => { if (!ev.active) sim.alphaTarget(0.3).restart(); d.fx = d.x; d.fy = d.y; })
+    .on("drag", (ev, d) => { d.fx = ev.x; d.fy = ev.y; })
+    .on("end", (ev, d) => { if (!ev.active) sim.alphaTarget(0); d.fx = null; d.fy = null; }));
+  sim.on("tick", () => {
+    link.attr("x1", (d) => d.source.x).attr("y1", (d) => d.source.y).attr("x2", (d) => d.target.x).attr("y2", (d) => d.target.y);
+    node.attr("transform", (d) => `translate(${d.x},${d.y})`);
+  });
+  document.title = "关系图 · Info Searching";
+}
+
+boot();
+</script>
+</body>
+</html>

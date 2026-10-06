@@ -1,0 +1,508 @@
+{
+ "domains": {
+  "formal-sciences": {
+   "name": "形式科学",
+   "icon": "🧮",
+   "scope": "数学、逻辑、统计学、理论计算机科学"
+  },
+  "natural-sciences": {
+   "name": "自然科学",
+   "icon": "🔭",
+   "scope": "物理、化学、天文、地球科学"
+  },
+  "life-medicine": {
+   "name": "生命与医学",
+   "icon": "🧬",
+   "scope": "生物学、遗传、生态、医学与健康"
+  },
+  "tech-ai": {
+   "name": "技术与 AI",
+   "icon": "🤖",
+   "scope": "计算机、人工智能、互联网、电子与工程技术"
+  },
+  "social-sciences": {
+   "name": "社会科学",
+   "icon": "🏛️",
+   "scope": "经济、心理、社会、政治、法律、教育"
+  },
+  "humanities": {
+   "name": "人文艺术",
+   "icon": "📜",
+   "scope": "哲学、宗教、语言、文学、艺术、传统文化"
+  },
+  "history": {
+   "name": "历史",
+   "icon": "⏳",
+   "scope": "历史事件、时代、文明与史学概念"
+  },
+  "geography": {
+   "name": "地理与地区",
+   "icon": "🌍",
+   "scope": "自然地理、人文地理、国家与地区"
+  },
+  "business": {
+   "name": "商业与产业",
+   "icon": "💼",
+   "scope": "企业、产业、金融、产品与商业模式"
+  },
+  "thinking": {
+   "name": "思维与方法",
+   "icon": "🧠",
+   "scope": "心智模型、学习方法、决策与认知工具"
+  }
+ },
+ "kinds": {
+  "concept": "概念",
+  "topic": "专题",
+  "event": "事件",
+  "person": "人物",
+  "place": "地点",
+  "work": "作品"
+ },
+ "relations": {
+  "is-a": {
+   "label": "是一种",
+   "inverse": "下位/实例"
+  },
+  "part-of": {
+   "label": "属于",
+   "inverse": "包含"
+  },
+  "based-on": {
+   "label": "前置知识",
+   "inverse": "后续延伸"
+  },
+  "leads-to": {
+   "label": "催生/演化出",
+   "inverse": "源自"
+  },
+  "contrasts": {
+   "label": "区别于",
+   "inverse": "区别于"
+  },
+  "applies-to": {
+   "label": "应用于",
+   "inverse": "所用方法"
+  },
+  "influenced": {
+   "label": "影响了",
+   "inverse": "受其影响"
+  },
+  "located-in": {
+   "label": "位于",
+   "inverse": "境内/包含"
+  },
+  "related": {
+   "label": "相关",
+   "inverse": "相关"
+  }
+ },
+ "nodes": [
+  {
+   "id": "attention-mechanism",
+   "title": "注意力机制",
+   "en": "Attention Mechanism",
+   "aliases": [
+    "注意力",
+    "Attention",
+    "自注意力",
+    "Self-Attention",
+    "缩放点积注意力",
+    "Scaled Dot-Product Attention",
+    "多头注意力",
+    "Multi-Head Attention",
+    "交叉注意力",
+    "QKV"
+   ],
+   "tags": [
+    "深度学习",
+    "自然语言处理",
+    "Transformer",
+    "大语言模型"
+   ],
+   "kind": "concept",
+   "domain": "tech-ai",
+   "status": "deep",
+   "confidence": "high",
+   "summary": "按\"相关程度\"给所有输入分配权重再加权求和的神经网络机制，是 Transformer 与大模型的核心。",
+   "updated": "2026-10-06",
+   "path": "kb/tech-ai/attention-mechanism.md",
+   "sources": 17,
+   "quiz": 7
+  },
+  {
+   "id": "context-engineering",
+   "title": "上下文工程",
+   "en": "Context Engineering",
+   "aliases": [
+    "上下文管理",
+    "Context Management",
+    "渐进式披露",
+    "Progressive Disclosure",
+    "即时检索",
+    "Just-in-time Retrieval",
+    "上下文腐化",
+    "Context Rot"
+   ],
+   "tags": [
+    "大语言模型",
+    "AI 智能体",
+    "提示词",
+    "检索增强",
+    "记忆"
+   ],
+   "kind": "concept",
+   "domain": "tech-ai",
+   "status": "deep",
+   "confidence": "medium",
+   "summary": "为大模型的每一步推理挑选、组织、压缩\"恰好够用\"的上下文信息的工程方法。",
+   "updated": "2026-10-06",
+   "path": "kb/tech-ai/context-engineering.md",
+   "sources": 13,
+   "quiz": 6
+  },
+  {
+   "id": "entropy",
+   "title": "熵",
+   "en": "Entropy",
+   "aliases": [
+    "热力学熵",
+    "统计熵",
+    "玻尔兹曼熵",
+    "克劳修斯熵",
+    "熵增",
+    "熵增定律",
+    "Thermodynamic Entropy"
+   ],
+   "tags": [
+    "热力学",
+    "统计力学",
+    "信息论",
+    "物理学史",
+    "跨学科"
+   ],
+   "kind": "concept",
+   "domain": "natural-sciences",
+   "status": "deep",
+   "confidence": "high",
+   "summary": "衡量一个系统\"有多少种微观方式能实现同一个宏观状态\"的物理量；孤立系统的熵不会减少。",
+   "updated": "2026-10-06",
+   "path": "kb/natural-sciences/entropy.md",
+   "sources": 15,
+   "quiz": 6
+  },
+  {
+   "id": "silk-road",
+   "title": "丝绸之路",
+   "en": "Silk Road",
+   "aliases": [
+    "丝路",
+    "丝绸之路网络",
+    "Silk Roads",
+    "Seidenstraße",
+    "陆上丝绸之路",
+    "古丝绸之路"
+   ],
+   "tags": [
+    "欧亚交流史",
+    "汉代",
+    "中亚",
+    "史学概念",
+    "世界遗产",
+    "地理"
+   ],
+   "kind": "concept",
+   "domain": "history",
+   "status": "deep",
+   "confidence": "high",
+   "summary": "19 世纪学者对古代欧亚之间陆海贸易与文化交流网络的统称；不是一条路，也不只运丝绸。",
+   "updated": "2026-10-06",
+   "path": "kb/history/silk-road.md",
+   "sources": 14,
+   "quiz": 6
+  },
+  {
+   "id": "ai-agent",
+   "title": "ai-agent",
+   "pending": true
+  },
+  {
+   "id": "arrow-of-time",
+   "title": "arrow-of-time",
+   "pending": true
+  },
+  {
+   "id": "belt-and-road-initiative",
+   "title": "belt-and-road-initiative",
+   "pending": true
+  },
+  {
+   "id": "buddhism-in-china",
+   "title": "buddhism-in-china",
+   "pending": true
+  },
+  {
+   "id": "central-asia",
+   "title": "central-asia",
+   "pending": true
+  },
+  {
+   "id": "hexi-corridor",
+   "title": "hexi-corridor",
+   "pending": true
+  },
+  {
+   "id": "information-entropy",
+   "title": "information-entropy",
+   "pending": true
+  },
+  {
+   "id": "kv-cache",
+   "title": "kv-cache",
+   "pending": true
+  },
+  {
+   "id": "landauer-principle",
+   "title": "landauer-principle",
+   "pending": true
+  },
+  {
+   "id": "large-language-model",
+   "title": "large-language-model",
+   "pending": true
+  },
+  {
+   "id": "maritime-silk-road",
+   "title": "maritime-silk-road",
+   "pending": true
+  },
+  {
+   "id": "probability",
+   "title": "probability",
+   "pending": true
+  },
+  {
+   "id": "prompt-engineering",
+   "title": "prompt-engineering",
+   "pending": true
+  },
+  {
+   "id": "retrieval-augmented-generation",
+   "title": "retrieval-augmented-generation",
+   "pending": true
+  },
+  {
+   "id": "second-law-of-thermodynamics",
+   "title": "second-law-of-thermodynamics",
+   "pending": true
+  },
+  {
+   "id": "selective-attention",
+   "title": "selective-attention",
+   "pending": true
+  },
+  {
+   "id": "seq2seq",
+   "title": "seq2seq",
+   "pending": true
+  },
+  {
+   "id": "softmax",
+   "title": "softmax",
+   "pending": true
+  },
+  {
+   "id": "sogdians",
+   "title": "sogdians",
+   "pending": true
+  },
+  {
+   "id": "state-space-model",
+   "title": "state-space-model",
+   "pending": true
+  },
+  {
+   "id": "thermodynamics",
+   "title": "thermodynamics",
+   "pending": true
+  },
+  {
+   "id": "transformer",
+   "title": "transformer",
+   "pending": true
+  },
+  {
+   "id": "word-embedding",
+   "title": "word-embedding",
+   "pending": true
+  },
+  {
+   "id": "working-memory",
+   "title": "working-memory",
+   "pending": true
+  },
+  {
+   "id": "zhang-qian",
+   "title": "zhang-qian",
+   "pending": true
+  }
+ ],
+ "edges": [
+  {
+   "source": "silk-road",
+   "type": "based-on",
+   "target": "zhang-qian",
+   "note": "张骞\"凿空\"西域被视为陆上丝路开通的标志"
+  },
+  {
+   "source": "silk-road",
+   "type": "located-in",
+   "target": "central-asia",
+   "note": "核心路段穿越中亚绿洲与草原"
+  },
+  {
+   "source": "silk-road",
+   "type": "related",
+   "target": "hexi-corridor",
+   "note": "中原通往西域的咽喉地带"
+  },
+  {
+   "source": "silk-road",
+   "type": "contrasts",
+   "target": "belt-and-road-initiative",
+   "note": "2013 年提出的当代合作倡议，借用了丝路之名"
+  },
+  {
+   "source": "silk-road",
+   "type": "contrasts",
+   "target": "maritime-silk-road",
+   "note": "海上路线网络，与陆路互为补充"
+  },
+  {
+   "source": "silk-road",
+   "type": "related",
+   "target": "sogdians",
+   "note": "粟特人是陆上丝路最重要的中间商之一"
+  },
+  {
+   "source": "silk-road",
+   "type": "leads-to",
+   "target": "buddhism-in-china",
+   "note": "佛教等宗教与思想沿这些路线传播"
+  },
+  {
+   "source": "entropy",
+   "type": "part-of",
+   "target": "thermodynamics",
+   "note": "热力学的核心状态函数"
+  },
+  {
+   "source": "entropy",
+   "type": "based-on",
+   "target": "probability",
+   "note": "统计诠释要用到概率与计数"
+  },
+  {
+   "source": "entropy",
+   "type": "leads-to",
+   "target": "second-law-of-thermodynamics",
+   "note": "熵是表述第二定律的核心量"
+  },
+  {
+   "source": "entropy",
+   "type": "contrasts",
+   "target": "information-entropy",
+   "note": "香农熵：数学形式相同，研究对象不同"
+  },
+  {
+   "source": "entropy",
+   "type": "related",
+   "target": "landauer-principle",
+   "note": "擦除信息的最低热耗散，连接信息与热力学"
+  },
+  {
+   "source": "entropy",
+   "type": "related",
+   "target": "arrow-of-time",
+   "note": "熵增常被用来解释时间为何有方向"
+  },
+  {
+   "source": "attention-mechanism",
+   "type": "based-on",
+   "target": "softmax",
+   "note": "把相关性分数变成和为 1 的权重"
+  },
+  {
+   "source": "attention-mechanism",
+   "type": "based-on",
+   "target": "word-embedding",
+   "note": "查询、键、值都是向量表示"
+  },
+  {
+   "source": "attention-mechanism",
+   "type": "based-on",
+   "target": "seq2seq",
+   "note": "注意力最初是为解决编码器-解码器的固定长度瓶颈而提出的"
+  },
+  {
+   "source": "attention-mechanism",
+   "type": "leads-to",
+   "target": "transformer",
+   "note": "2017 年\"完全基于注意力\"的架构"
+  },
+  {
+   "source": "attention-mechanism",
+   "type": "leads-to",
+   "target": "kv-cache",
+   "note": "自回归推理时缓存键和值，带来显存瓶颈"
+  },
+  {
+   "source": "attention-mechanism",
+   "type": "contrasts",
+   "target": "selective-attention",
+   "note": "名字借自认知心理学，但机制完全不同"
+  },
+  {
+   "source": "attention-mechanism",
+   "type": "contrasts",
+   "target": "state-space-model",
+   "note": "线性时间的替代路线（如 Mamba）"
+  },
+  {
+   "source": "context-engineering",
+   "type": "based-on",
+   "target": "attention-mechanism",
+   "note": "上下文为什么有限：注意力的 n² 成本与长上下文中的位置效应"
+  },
+  {
+   "source": "context-engineering",
+   "type": "based-on",
+   "target": "large-language-model",
+   "note": "要先知道模型只能看见上下文窗口里的内容"
+  },
+  {
+   "source": "context-engineering",
+   "type": "contrasts",
+   "target": "prompt-engineering",
+   "note": "提示词工程关注\"怎么写指令\"，是上下文工程的子集"
+  },
+  {
+   "source": "context-engineering",
+   "type": "related",
+   "target": "retrieval-augmented-generation",
+   "note": "\"选择\"策略的代表技术"
+  },
+  {
+   "source": "context-engineering",
+   "type": "applies-to",
+   "target": "ai-agent",
+   "note": "多轮工具调用的智能体是上下文工程的主战场"
+  },
+  {
+   "source": "context-engineering",
+   "type": "related",
+   "target": "working-memory",
+   "note": "常用的类比：上下文窗口像工作记忆/内存"
+  }
+ ]
+}
