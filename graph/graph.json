@@ -92,6 +92,10 @@
    "label": "位于",
    "inverse": "境内/包含"
   },
+  "covers": {
+   "label": "涵盖",
+   "inverse": "收录于"
+  },
   "related": {
    "label": "相关",
    "inverse": "相关"

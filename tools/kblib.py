@@ -64,6 +64,7 @@ RELATIONS: dict[str, tuple[str, str]] = {
     "applies-to": ("应用于", "所用方法"),
     "influenced": ("影响了", "受其影响"),
     "located-in": ("位于", "境内/包含"),
+    "covers": ("涵盖", "收录于"),
     "related": ("相关", "相关"),
 }
 
